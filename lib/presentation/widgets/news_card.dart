@@ -18,7 +18,7 @@ class CustomNewsCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
-        height: 90,
+        height: MediaQuery.of(context).size.height*0.115,
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(10)),
         child: Row(

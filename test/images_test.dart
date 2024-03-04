@@ -13,6 +13,7 @@ void main() {
     expect(File(Images.calendarlogo).existsSync(), isTrue);
     expect(File(Images.callcenter).existsSync(), isTrue);
     expect(File(Images.car).existsSync(), isTrue);
+    expect(File(Images.catlogo).existsSync(), isTrue);
     expect(File(Images.copylogo).existsSync(), isTrue);
     expect(File(Images.doveritelnyiplateg).existsSync(), isTrue);
     expect(File(Images.homeactive).existsSync(), isTrue);
@@ -21,8 +22,10 @@ void main() {
     expect(File(Images.listviewphoto).existsSync(), isTrue);
     expect(File(Images.listviewphoto2).existsSync(), isTrue);
     expect(File(Images.logo).existsSync(), isTrue);
+    expect(File(Images.logoforsplash).existsSync(), isTrue);
     expect(File(Images.mbank).existsSync(), isTrue);
     expect(File(Images.megaPay).existsSync(), isTrue);
+    expect(File(Images.more).existsSync(), isTrue);
     expect(File(Images.newstest).existsSync(), isTrue);
     expect(File(Images.newsunabled).existsSync(), isTrue);
     expect(File(Images.odengi).existsSync(), isTrue);

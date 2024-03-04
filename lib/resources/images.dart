@@ -11,6 +11,7 @@ class Images {
   static const String calendarlogo = 'assets/pngs/calendarlogo.png';
   static const String callcenter = 'assets/pngs/callcenter.png';
   static const String car = 'assets/pngs/car.png';
+  static const String catlogo = 'assets/pngs/catlogo.png';
   static const String copylogo = 'assets/pngs/copylogo.png';
   static const String doveritelnyiplateg = 'assets/pngs/doveritelnyiplateg.png';
   static const String homeactive = 'assets/pngs/homeactive.png';
@@ -19,8 +20,10 @@ class Images {
   static const String listviewphoto = 'assets/pngs/listviewphoto.png';
   static const String listviewphoto2 = 'assets/pngs/listviewphoto2.png';
   static const String logo = 'assets/pngs/logo.png';
+  static const String logoforsplash = 'assets/pngs/logoforsplash.png';
   static const String mbank = 'assets/pngs/mbank.png';
   static const String megaPay = 'assets/pngs/megaPay.png';
+  static const String more = 'assets/pngs/more.png';
   static const String newstest = 'assets/pngs/newstest.png';
   static const String newsunabled = 'assets/pngs/newsunabled.png';
   static const String odengi = 'assets/pngs/odengi.png';

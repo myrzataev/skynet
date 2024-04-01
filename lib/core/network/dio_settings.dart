@@ -2,23 +2,25 @@ import "dart:async";
 
 import "package:dio/dio.dart";
 import "package:flutter/foundation.dart";
-import "package:skynet/core/consts/app_consts.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 class DioSettings {
+  late SharedPreferences prefs;
   DioSettings() {
     unawaited(setup());
   }
 
   Dio dio = Dio(
     BaseOptions(
+
       baseUrl: "http://91.210.169.237:8001",
       contentType: "application/json",
       headers: {
-        "Accept": "application/json",
-        "Authorization": AppConsts.token,
+        // "Accept": "application/json",
+        // "Authorization": "Token ${.getString("token")}"
       },
-      connectTimeout: const Duration(seconds: 20),
-      receiveTimeout: const Duration(seconds: 20),
+      connectTimeout: const Duration(seconds: 30),
+      receiveTimeout: const Duration(seconds: 30),
     ),
   );
 

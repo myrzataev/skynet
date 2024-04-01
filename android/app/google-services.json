@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "219323732008",
+    "project_id": "subscriber-app-1de7a",
+    "storage_bucket": "subscriber-app-1de7a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219323732008:android:d0385f305fb124c8cea51d",
+        "android_client_info": {
+          "package_name": "com.example.skynet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4U4Gy-bCjbFDBMRLSGsAGTY5TR1iwYic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219323732008:android:0e557fb05a4d31edcea51d",
+        "android_client_info": {
+          "package_name": "com.skynet.skynet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD4U4Gy-bCjbFDBMRLSGsAGTY5TR1iwYic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

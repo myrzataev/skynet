@@ -1,84 +1,67 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:skynet/core/network/dio_settings.dart';
-import 'package:skynet/core/routes/app_router.dart';
-import 'package:skynet/modules/home/data/providers/profile_info_provider.dart';
-import 'package:skynet/modules/home/domain/repositories/get_all_news_repo_impl.dart';
-import 'package:skynet/modules/home/domain/repositories/get_profile_details_repo_impl.dart';
-import 'package:skynet/modules/home/domain/repositories/get_transactions_histor_impl.dart';
-import 'package:skynet/modules/home/domain/usecase/get_all_news_repo_usecase.dart';
-import 'package:skynet/modules/home/domain/usecase/get_profile_details_repo_usecase.dart';
-import 'package:skynet/modules/home/domain/usecase/get_transactions_histor_usecase.dart';
-import 'package:skynet/modules/home/presentation/blocs/news_bloc/new_list_bloc.dart';
-import 'package:skynet/modules/home/presentation/blocs/personal_details_bloc/get_personal_details_bloc.dart';
-import 'package:skynet/modules/home/presentation/blocs/transactions_bloc/transactions_bloc.dart';
+import 'dart:convert';
 
-void main(List<String> args) {
-  runApp(const MyApp());
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skynet/config/app_info.dart';
+import 'package:skynet/core/notification/push_notification.dart';
+import 'package:skynet/config/routes/app_router.dart';
+import 'package:skynet/core/services/service_locator.dart';
+import 'package:skynet/firebase_options.dart';
+import 'package:skynet/internal/my_app.dart';
+
+final navigatorKey = GlobalKey<NavigatorState>();
+
+Future _firebaseBackgroundMessage(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  if (message.notification != null) {
+    // print("some notification received");
+  }
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+void main(List<String> args) async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
-  @override
-  Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider(
-          create: (context) => DioSettings(),
-        ),
-        RepositoryProvider(
-          create: (context) => GetProfileDetailsUseCase(
-              dio: RepositoryProvider.of<DioSettings>(context).dio),
-        ),
-        RepositoryProvider(
-          create: (context) => GetProfileDetailsRepoImpl(
-              useCase:
-                  RepositoryProvider.of<GetProfileDetailsUseCase>(context)),
-        ),
-        RepositoryProvider(
-            create: (context) => GetAllNewsRepositoryUseCase(
-                dio: RepositoryProvider.of<DioSettings>(context).dio)),
-        RepositoryProvider(
-            create: (context) => GetAllNewsRepositoryImpl(
-                useCase: RepositoryProvider.of<GetAllNewsRepositoryUseCase>(
-                    context))),
-        RepositoryProvider(
-            create: (context) => GetTransactionsHistoryUseCase(
-                dio: RepositoryProvider.of<DioSettings>(context).dio)),
-        RepositoryProvider(
-            create: (context) => GetTransactionsHistoryRepoImpl(
-                useCase: RepositoryProvider.of<GetTransactionsHistoryUseCase>(
-                    context)))
-      ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => GetPersonalDetailsBloc(
-                repository:
-                    RepositoryProvider.of<GetProfileDetailsRepoImpl>(context)),
-          ),
-          BlocProvider(
-            create: (context) => NewListBloc(
-                repository:
-                    RepositoryProvider.of<GetAllNewsRepositoryImpl>(context)),
-          ),
-          BlocProvider(
-              create: (context) => TransactionsBloc(
-                  repository:
-                      RepositoryProvider.of<GetTransactionsHistoryRepoImpl>(
-                          context)))
-        ],
-        child: ChangeNotifierProvider(
-          create: (context) => GetProfileInfoProvider(),
-          child: MaterialApp.router(
-            routerConfig: AppRouter().config(),
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(scaffoldBackgroundColor: const Color(0xffFCE6F1)),
-          ),
-        ),
-      ),
-    );
-  }
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+  await ScreenUtil.ensureScreenSize();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await ScreenUtil.ensureScreenSize();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
+      // ignore: body_might_complete_normally_catch_error
+      .catchError((e) {
+    // print(" Error : ${e.toString()}");
+  });
+  PushNotifications.init();
+  PushNotifications.localNotiInit();
+  await GlobalConfig.initialize();
+
+  //listen to background notifications
+
+  FirebaseMessaging.onBackgroundMessage(
+      (message) => _firebaseBackgroundMessage(message));
+//on background messages
+  FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) {
+    if (remoteMessage.notification != null) {
+      appRoutes.go(
+          '/bottomNavigation/readNewsFromNotification/${remoteMessage.notification?.title ?? ""}/${remoteMessage.notification?.body ?? ""}');
+    }
+  });
+// on foregroundmessages
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    final String payloadStringData = jsonEncode(message.data);
+    if (message.notification != null) {
+      PushNotifications.showSimpleNotification(
+          title: message.notification!.title ?? "",
+          body: message.notification!.body ?? "",
+          payload: payloadStringData);
+    }
+  });
+  await setupServiceLocator();
+
+  runApp(const MyApp());
 }

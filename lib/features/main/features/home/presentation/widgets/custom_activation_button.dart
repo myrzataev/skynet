@@ -4,16 +4,17 @@ import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 
 class CustomActivationButton extends StatelessWidget {
   final Widget childWidget;
+  final double height;
   const CustomActivationButton({
     super.key,
-    required this.childWidget,
+    required this.childWidget, required this.height,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
         alignment: Alignment.center,
-        height: 58.5.h,
+        height: height,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15.r),
             color: Colors.white,

@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skynet/features/main/features/home/domain/entity/application_status_entity.dart';
+import 'package:skynet/features/main/features/home/presentation/pages/application_status_screen.dart';
 import 'package:skynet/main.dart';
 import 'package:skynet/features/authorization/presentation/screens/agreement_screen.dart';
 
@@ -80,6 +82,14 @@ final GoRouter appRoutes = GoRouter(
                 title: title ?? "",
                 body: body ?? "",
               );
+            },
+          ),
+          GoRoute(
+            path: "applicationStatusScreen",
+            builder: (context, state) {
+              ApplicationStatusEntity model =
+                  state.extra as ApplicationStatusEntity;
+              return ApplicationStatusScreen(model: model);
             },
           )
         ]),

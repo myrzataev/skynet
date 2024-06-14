@@ -8,8 +8,12 @@ final class ApplicationStatusInitial extends ApplicationStatusState {}
 final class ApplicationStatusLoading extends ApplicationStatusState {}
 
 final class ApplicationStatusSuccess extends ApplicationStatusState {
-  final ApplicationStatusEntity entity;
+  final List<ApplicationStatusEntity> entity;
   ApplicationStatusSuccess({required this.entity});
 }
 
-final class ApplicationStatusError extends ApplicationStatusState {}
+final class ApplicationStatusError extends ApplicationStatusState {
+  final String errorText;
+
+  ApplicationStatusError({required this.errorText});
+}

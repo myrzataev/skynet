@@ -161,6 +161,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
                               : null;
                         },
                         child: CustomActivationButton(
+                          height: 54.h,
                             childWidget: BlocConsumer<AuthorizationBloc,
                                 AuthorizationState>(
                           listener: (context, state) {
@@ -196,7 +197,7 @@ class _AuthorizationScreenState extends State<AuthorizationScreen> {
                                 style: AppFonts.s14w500,
                               );
                             } else if (state is AuthorizationError) {
-                              return Text("Войти");
+                              return const Text("Войти");
                               // return Text(state.errorText);
                             }
                             return Text(

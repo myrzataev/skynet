@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:skynet/features/main/features/profile/data/repositories_impl/logout_impl.dart';
+import 'package:skynet/features/main/features/profile/data/repositories/logout_impl.dart';
 
 part 'log_out_event.dart';
 part 'log_out_state.dart';

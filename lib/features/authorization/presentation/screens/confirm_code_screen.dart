@@ -220,36 +220,40 @@ class _PinputExampleState extends State<ConfirmCodeScreen> {
                                   },
                                   child: Ink(
                                       child: CustomActivationButton(
+                                          height: 54.h,
                                           childWidget: BlocListener<
                                               ConfirmCodeBloc,
                                               ConfirmCodeState>(
-                                    listener: (context, state) {
-                                      if (state is ConfirmCodeSucccess) {
-                                        UIBlock.unblock(context);
+                                            listener: (context, state) {
+                                              if (state
+                                                  is ConfirmCodeSucccess) {
+                                                UIBlock.unblock(context);
 
-                                        context.go(
-                                            '/confirmCode/${widget.phoneNumber}/agreement');
-                                      } else if (state is ConfirmCodeError) {
-                                        UIBlock.unblock(context);
-                                        if (state.errorText ==
-                                            "Неправильный код") {
-                                          setState(() {
-                                            smcCodeCorrect = false;
-                                            hasError = true;
-                                          });
-                                        }
-                                      } else if (state is ConfirmCodeLoading) {
-                                        UIBlock.block(
-                                          context,
-                                          canDissmissOnBack: true,
-                                        );
-                                      }
-                                    },
-                                    child: Text(
-                                      "Войти",
-                                      style: AppFonts.s14w500,
-                                    ),
-                                  )))),
+                                                context.go(
+                                                    '/confirmCode/${widget.phoneNumber}/agreement');
+                                              } else if (state
+                                                  is ConfirmCodeError) {
+                                                UIBlock.unblock(context);
+                                                if (state.errorText ==
+                                                    "Неправильный код") {
+                                                  setState(() {
+                                                    smcCodeCorrect = false;
+                                                    hasError = true;
+                                                  });
+                                                }
+                                              } else if (state
+                                                  is ConfirmCodeLoading) {
+                                                UIBlock.block(
+                                                  context,
+                                                  canDissmissOnBack: true,
+                                                );
+                                              }
+                                            },
+                                            child: Text(
+                                              "Войти",
+                                              style: AppFonts.s14w500,
+                                            ),
+                                          )))),
                             ),
                           ),
                         ),

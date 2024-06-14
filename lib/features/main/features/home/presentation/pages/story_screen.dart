@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:story/story_page_view.dart';
 
@@ -18,15 +17,16 @@ class _StoriesScreenState extends State<StoriesScreen> {
   @override
   void initState() {
     super.initState();
-
-    FlutterNativeSplash.remove();
   }
+
 
   @override
   Widget build(BuildContext context) {
+
+  
     return Scaffold(
-      
       body: StoryPageView(
+
         indicatorDuration: const Duration(seconds: 10),
         initialPage: widget.storyIndex,
         indicatorPadding: EdgeInsets.only(top: 45.h),

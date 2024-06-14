@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
-import 'package:skynet/features/authorization/data/usecase/confirm_code_repository.dart';
+import 'package:skynet/features/authorization/data/data_sources/confirm_code_repository.dart';
 
 part 'confirm_code_event.dart';
 part 'confirm_code_state.dart';

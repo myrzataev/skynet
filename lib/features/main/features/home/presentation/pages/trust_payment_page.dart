@@ -107,6 +107,7 @@ class TrustPaymentPage extends StatelessWidget {
             BlocProvider.of<GetTrustPaymentBloc>(context).add(GetCreditEvent());
           },
           child: CustomActivationButton(
+            height: 58.5.h,
             childWidget: BlocBuilder<GetTrustPaymentBloc, GetTrustPaymentState>(
               builder: (context, state) {
                 if (state is GetTrustPaymentLoading) {

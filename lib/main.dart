@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:skynet/config/app_info.dart';
 import 'package:skynet/core/notification/push_notification.dart';
 import 'package:skynet/config/routes/app_router.dart';
@@ -24,6 +25,7 @@ Future _firebaseBackgroundMessage(RemoteMessage message) async {
 
 void main(List<String> args) async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  initializeDateFormatting('ru_RU', null);
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

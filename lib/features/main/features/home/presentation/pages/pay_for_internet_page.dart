@@ -18,7 +18,15 @@ class PayForInternetPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var abonentInfo = context.watch<GetProfileInfoProvider>().model;
     double? positiveBalance = double.tryParse(abonentInfo?.balance ?? "");
-    String positiveBalanceString = positiveBalance!.abs().toString();
+    double? multiply(double val) {
+      return val * 100;
+    }
+
+    String positiveBalanceStringForO =
+        multiply(positiveBalance ?? 0)?.abs().toStringAsFixed(0) ?? "0";
+
+    String positiveBalanceString =
+        positiveBalance?.abs().toStringAsFixed(0) ?? "0";
     return Scaffold(
       body: ConnectivityOverlay(
         isConnected:
@@ -43,7 +51,7 @@ class PayForInternetPage extends StatelessWidget {
                         ),
                         CustomPayFromServices(
                           url:
-                              "https://o.kg/l/a?t=wl_ctl&id=9&req=${abonentInfo?.ls ?? ""}&sum=$positiveBalanceString",
+                              "https://o.kg/l/a?t=wl_ctl&id=9&req=${abonentInfo?.ls ?? ""}&sum=$positiveBalanceStringForO",
                           image: Images.odengitwo,
                           name: "О!Деньги",
                         ),
@@ -52,9 +60,21 @@ class PayForInternetPage extends StatelessWidget {
                               "https://balance.kg/pay/skynet?amount=$positiveBalanceString&requisite=${abonentInfo?.ls ?? ""}",
                           image: Images.balancetwo,
                           name: "Balance.kg",
-                        )
+                        ),
                       ],
                     ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 15.h),
+                      child: Row(
+                        children: [
+                          CustomPayFromServices(
+                            image: Images.logoMegapay,
+                            name: "MegaPay",
+                            url: "https://megapay.kg/#deeplink?serviceId=466&amount=$positiveBalanceString&destination=${abonentInfo?.ls ?? ""}&special=false",
+                          )
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),

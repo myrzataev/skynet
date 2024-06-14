@@ -15,7 +15,7 @@ class CustomAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 120.h,
+      // height: 122.h,
       width: double.infinity,
       decoration: BoxDecoration(
           color: const Color(0xffffffff),

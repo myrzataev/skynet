@@ -17,7 +17,7 @@ class ApplicationStatusBloc
         final result = await repository.applicationStatus();
         emit(ApplicationStatusSuccess(entity: result));
       } catch (e) {
-        emit(ApplicationStatusError());
+        emit(ApplicationStatusError(errorText: e.toString()));
       }
     });
   }

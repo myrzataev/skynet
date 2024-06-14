@@ -8,6 +8,9 @@ void main() {
     expect(File(Images.frame3).existsSync(), isTrue);
     expect(File(Images.activenews).existsSync(), isTrue);
     expect(File(Images.announcement).existsSync(), isTrue);
+    expect(File(Images.applicationStatusFirstStage).existsSync(), isTrue);
+    expect(File(Images.applicationStatusStageTwo).existsSync(), isTrue);
+    expect(File(Images.appliccationStatusStageThree).existsSync(), isTrue);
     expect(File(Images.attention).existsSync(), isTrue);
     expect(File(Images.balance).existsSync(), isTrue);
     expect(File(Images.balancetwo).existsSync(), isTrue);
@@ -17,6 +20,7 @@ void main() {
     expect(File(Images.car).existsSync(), isTrue);
     expect(File(Images.catlogo).existsSync(), isTrue);
     expect(File(Images.closeicon).existsSync(), isTrue);
+    expect(File(Images.config).existsSync(), isTrue);
     expect(File(Images.connectionlost).existsSync(), isTrue);
     expect(File(Images.copylogo).existsSync(), isTrue);
     expect(File(Images.dots).existsSync(), isTrue);
@@ -29,6 +33,7 @@ void main() {
     expect(File(Images.lightinglogo).existsSync(), isTrue);
     expect(File(Images.listviewphoto).existsSync(), isTrue);
     expect(File(Images.listviewphoto2).existsSync(), isTrue);
+    expect(File(Images.logoMegapay).existsSync(), isTrue);
     expect(File(Images.logo).existsSync(), isTrue);
     expect(File(Images.logoforsplash).existsSync(), isTrue);
     expect(File(Images.logout).existsSync(), isTrue);
@@ -45,15 +50,19 @@ void main() {
     expect(File(Images.placeholder).existsSync(), isTrue);
     expect(File(Images.pricelogo).existsSync(), isTrue);
     expect(File(Images.quality).existsSync(), isTrue);
+    expect(File(Images.ratingStar).existsSync(), isTrue);
     expect(File(Images.rsk).existsSync(), isTrue);
     expect(File(Images.sales).existsSync(), isTrue);
     expect(File(Images.server).existsSync(), isTrue);
+    expect(File(Images.serviceEngineer).existsSync(), isTrue);
+    expect(File(Images.serviceEngineerNumber).existsSync(), isTrue);
     expect(File(Images.sms).existsSync(), isTrue);
     expect(File(Images.splashscreen).existsSync(), isTrue);
     expect(File(Images.story).existsSync(), isTrue);
     expect(File(Images.storyofoperation).existsSync(), isTrue);
     expect(File(Images.tele).existsSync(), isTrue);
     expect(File(Images.tick).existsSync(), isTrue);
+    expect(File(Images.tickForStage).existsSync(), isTrue);
     expect(File(Images.wallet).existsSync(), isTrue);
   });
 }

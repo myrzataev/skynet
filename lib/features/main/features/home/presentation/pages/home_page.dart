@@ -5,11 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:provider/provider.dart';
 import 'package:skynet/core/consts/app_fonts.dart';
+import 'package:skynet/core/services/clipboard_copy.dart';
+import 'package:skynet/core/services/service_locator.dart';
 import 'package:skynet/features/authorization/presentation/blocs/internet_cubit/internet_cubit.dart';
 import 'package:skynet/features/authorization/presentation/screens/connectivity_widget.dart';
 import 'package:skynet/features/main/features/home/data/models/stories_model.dart';
+import 'package:skynet/features/main/features/home/presentation/blocs/application_status_bloc/application_status_bloc.dart';
 import 'package:skynet/features/main/features/home/presentation/providers/check_internet_connection.dart';
 import 'package:skynet/features/main/features/home/presentation/providers/profile_info_provider.dart';
 import 'package:skynet/features/main/features/home/presentation/blocs/personal_details_bloc/get_personal_details_bloc.dart';
@@ -19,16 +24,21 @@ import 'package:skynet/features/main/features/home/presentation/pages/pay_for_in
 import 'package:skynet/features/main/features/home/presentation/pages/story_screen.dart';
 import 'package:skynet/features/main/features/home/presentation/pages/trust_payment_page.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/active_services.dart';
+import 'package:skynet/features/main/features/home/presentation/widgets/apllication_status_container.dart';
+import 'package:skynet/features/main/features/home/presentation/widgets/application_status_widget.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/custom_appbar.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/custom_container.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/custom_pay_button.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/custom_stories_shimmer.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/custom_error_widget.dart';
+import 'package:skynet/features/main/features/home/presentation/widgets/get_application_status_title.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/history_operation_button.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/home_page_shimmer.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/licevoi_shet.dart';
+import 'package:skynet/features/main/features/home/presentation/widgets/shimmer_container.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/show_balance.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/stories_widget.dart';
+import 'package:skynet/features/main/features/news/presentation/blocs/cubit/mark_as_viewed_cubit.dart';
 import 'package:skynet/features/main/features/news/presentation/blocs/local_news_bloc/localnews_bloc.dart';
 import 'package:skynet/features/main/features/news/presentation/widgets/local_news_dialog.dart';
 import 'package:skynet/resources/resources.dart';
@@ -46,13 +56,35 @@ class _HomePageState extends State<HomePage>
   @override
   bool get wantKeepAlive => true;
   bool isConnected = true;
+  Future<void> _checkForUpdates() async {
+    InAppUpdate.checkForUpdate().then((info) {
+      setState(() {
+        if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+          update();
+        }
+      });
+    }).catchError((e) {
+      debugPrint(e.toString());
+    });
+  }
+
+  void update() async {
+    await InAppUpdate.startFlexibleUpdate();
+    InAppUpdate.completeFlexibleUpdate().then((_) {}).catchError((e) {
+      debugPrint(e.toString());
+    });
+  }
+
   @override
   void initState() {
+    _checkForUpdates();
     super.initState();
 
     BlocProvider.of<GetPersonalDetailsBloc>(context)
         .add(GetPersonalDetailEvent());
     BlocProvider.of<StoriesBloc>(context).add(GetStoriesEvent());
+    BlocProvider.of<ApplicationStatusBloc>(context)
+        .add(GetApplicationStatusEvent());
   }
 
   @override
@@ -91,14 +123,16 @@ class _HomePageState extends State<HomePage>
                     listener: (context, state) {
                       if (state is LocalnewsSuccess) {
                         if (state.model.isNotEmpty) {
+                          BlocProvider.of<MarkAsViewedCubit>(context)
+                              .markAsViewed(
+                                  postId: state.model.last.id.toString(),
+                                  postType: state.model.last.postType ?? "");
+
                           return openFullscreenNews(
                               newsItem: state.model.last, context: context);
                         }
                       } else if (state is LocalnewsLoading) {
-                        print("waiting for local news");
-                      } else {
-                        print("error for local news");
-                      }
+                      } else {}
                     },
                     child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,13 +148,15 @@ class _HomePageState extends State<HomePage>
                                     .add(GetPersonalDetailEvent());
                                 BlocProvider.of<StoriesBloc>(context)
                                     .add(GetStoriesEvent());
+                                BlocProvider.of<ApplicationStatusBloc>(context)
+                                    .add(GetApplicationStatusEvent());
                               },
                               child: ListView(
                                 scrollDirection: Axis.vertical,
                                 padding: EdgeInsetsDirectional.zero,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.only(left: 25.w),
+                                    padding: EdgeInsets.only(left: 2.w),
                                     child: SizedBox(
                                         height: 130.h,
                                         width: double.infinity,
@@ -295,9 +331,15 @@ class _HomePageState extends State<HomePage>
                                             Row(
                                               children: [
                                                 LicevoiShetWidget(
-                                                  onTap: copy(
-                                                      text: state.model.ls
-                                                          .toString()),
+                                                  onTap: () {
+                                                    final copyToClipboard =
+                                                        locator<
+                                                            CopyToClipboard>();
+                                                    copyToClipboard
+                                                        .copytoClipboard(
+                                                            text: state.model.ls
+                                                                .toString());
+                                                  },
                                                   licevoiShet: int.tryParse(
                                                           state.model.ls
                                                               .toString()) ??
@@ -356,15 +398,6 @@ class _HomePageState extends State<HomePage>
                                                         MaterialPageRoute(
                                                             builder: (context) =>
                                                                 const CustomerSupportScreen()));
-
-                                                    // final SharedPreferences
-                                                    //     prefs =
-                                                    //     await SharedPreferences
-                                                    //         .getInstance();
-                                                    // // BlocProvider.of<PayCubit>(context)
-                                                    // //     .payFromService(url: AppConsts.openWatsapp);
-                                                    // print(
-                                                    //     'token of firebase ${prefs.getString("firebase_token")}');
                                                   },
                                                 ),
                                               ],
@@ -378,14 +411,87 @@ class _HomePageState extends State<HomePage>
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             const PayForInternetPage()))),
-                                                // onTap: () => context.router.push(
-                                                //     const PayForInternetRoute())
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
                                     ),
+                                  ),
+                                  BlocBuilder<ApplicationStatusBloc,
+                                      ApplicationStatusState>(
+                                    builder: (context, state) {
+                                      if (state is ApplicationStatusLoading) {
+                                        return CustomShimmerContainer(
+                                            height: 85.h,
+                                            width: 340.w,
+                                            radius: 15.r);
+                                      } else if (state
+                                          is ApplicationStatusSuccess) {
+                                        return SizedBox(
+                                          height:
+                                              ((state.entity.length) * 110.h),
+                                          width: 100,
+                                          child: ListView.builder(
+                                              physics:
+                                                  const NeverScrollableScrollPhysics(),
+                                              padding:
+                                                  EdgeInsetsDirectional.zero,
+                                              scrollDirection: Axis.vertical,
+                                              itemCount: state.entity.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding: EdgeInsets.only(
+                                                      top: 20.h,
+                                                      left: 25.w,
+                                                      right: 25.w),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      context.go(
+                                                          "/bottomNavigation/applicationStatusScreen",
+                                                          extra: state
+                                                              .entity[index]);
+                                                    },
+                                                    child:
+                                                        CustomApplicationStatusWidget(
+                                                      statusId: int.parse(state
+                                                              .entity[index]
+                                                              .stageId ??
+                                                          ""),
+                                                      statusOfApplicationDescription:
+                                                          Text(
+                                                        GetApplicationStatusService
+                                                            .currentStageDescription(
+                                                                stage: int.parse(state
+                                                                        .entity[
+                                                                            index]
+                                                                        .stageId ??
+                                                                    "0")),
+                                                        maxLines: 3,
+                                                        softWrap: true,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        style: AppFonts.s12w500
+                                                            .copyWith(
+                                                                color: const Color(
+                                                                    0xff77C229)),
+                                                      ),
+                                                      statusOfApplicationProgessBar:
+                                                          CustomProgressIndicator(
+                                                              currentStage: int
+                                                                  .parse(state
+                                                                          .entity[
+                                                                              index]
+                                                                          .stageId ??
+                                                                      "0")),
+                                                    ),
+                                                  ),
+                                                );
+                                              }),
+                                        );
+                                      }
+                                      return const SizedBox();
+                                    },
                                   ),
                                   Padding(
                                     padding:
@@ -440,6 +546,7 @@ class _HomePageState extends State<HomePage>
                 } else if (state is GetPersonalDetailsLoading) {
                   return const HomePageShimmerPage();
                 } else if (state is GetPersonalDetailsError) {
+                  // return Text(state.errorText);
                   return Center(child: CustomErrorWidget(
                     onTap: () async {
                       setState(() {
@@ -454,10 +561,5 @@ class _HomePageState extends State<HomePage>
             ),
           )),
     );
-  }
-
-  copy({required String text}) {
-    final value = ClipboardData(text: text);
-    Clipboard.setData(value);
   }
 }

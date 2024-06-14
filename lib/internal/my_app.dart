@@ -8,11 +8,14 @@ import 'package:skynet/config/routes/app_router.dart';
 import 'package:skynet/core/services/shared_preferences_provider.dart';
 import 'package:skynet/core/unfocus_settings.dart';
 import 'package:skynet/features/authorization/data/repositories/authorization_get_sms_impl.dart';
-import 'package:skynet/features/authorization/data/usecase/authorization_get_sms_usecase.dart';
-import 'package:skynet/features/authorization/data/usecase/confirm_code_repository.dart';
+import 'package:skynet/features/authorization/data/data_sources/authorization_get_sms_usecase.dart';
+import 'package:skynet/features/authorization/data/data_sources/confirm_code_repository.dart';
 import 'package:skynet/features/authorization/presentation/blocs/authorization_bloc/authorization_bloc.dart';
 import 'package:skynet/features/authorization/presentation/blocs/confirm_code_bloc/confirm_code_bloc.dart';
 import 'package:skynet/features/authorization/presentation/blocs/internet_cubit/internet_cubit.dart';
+import 'package:skynet/features/main/features/home/data/data_sources/sen_feedback_ds.dart';
+import 'package:skynet/features/main/features/home/data/repositories/send_feedback_impl.dart';
+import 'package:skynet/features/main/features/home/presentation/blocs/send_feedback/send_feed_back_bloc.dart';
 import 'package:skynet/features/main/features/home/presentation/providers/check_internet_connection.dart';
 import 'package:skynet/features/main/features/home/presentation/providers/profile_info_provider.dart';
 import 'package:skynet/features/main/features/home/presentation/providers/sms_code_provider.dart';
@@ -21,11 +24,11 @@ import 'package:skynet/features/main/features/home/data/repositories/get_profile
 import 'package:skynet/features/main/features/home/data/repositories/get_stories_repo_impl.dart';
 import 'package:skynet/features/main/features/home/data/repositories/get_transactions_histor_impl.dart';
 import 'package:skynet/features/main/features/home/data/repositories/get_trust_payment_impl.dart';
-import 'package:skynet/features/main/features/home/data/usecase/application_status_use_case.dart';
-import 'package:skynet/features/main/features/home/data/usecase/get_profile_details_repo_usecase.dart';
-import 'package:skynet/features/main/features/home/data/usecase/get_stories_usecase.dart';
-import 'package:skynet/features/main/features/home/data/usecase/get_transactions_histor_usecase.dart';
-import 'package:skynet/features/main/features/home/data/usecase/get_trust_payment_usecase.dart';
+import 'package:skynet/features/main/features/home/data/data_sources/application_status_use_case.dart';
+import 'package:skynet/features/main/features/home/data/data_sources/get_profile_details_repo_usecase.dart';
+import 'package:skynet/features/main/features/home/data/data_sources/get_stories_usecase.dart';
+import 'package:skynet/features/main/features/home/data/data_sources/get_transactions_histor_usecase.dart';
+import 'package:skynet/features/main/features/home/data/data_sources/get_trust_payment_usecase.dart';
 import 'package:skynet/features/main/features/home/presentation/blocs/application_status_bloc/application_status_bloc.dart';
 import 'package:skynet/features/main/features/home/presentation/blocs/image_precashe_cubit/imageprecashe_cubit.dart';
 import 'package:skynet/features/main/features/home/presentation/blocs/pay_cubit/pay_cubit.dart';
@@ -38,16 +41,16 @@ import 'package:skynet/features/main/features/news/data/repositories/get_all_new
 import 'package:skynet/features/main/features/news/data/repositories/get_local_news_impl.dart';
 import 'package:skynet/features/main/features/news/data/repositories/get_personal_news_impl.dart';
 import 'package:skynet/features/main/features/news/data/repositories/mark_as_read_impl.dart';
-import 'package:skynet/features/main/features/news/data/usecase/get_all_news_repo_usecase.dart';
-import 'package:skynet/features/main/features/news/data/usecase/get_local_news_usecase.dart';
-import 'package:skynet/features/main/features/news/data/usecase/get_personal_news_use_case.dart';
-import 'package:skynet/features/main/features/news/data/usecase/mark_as_viewed_use_case.dart';
+import 'package:skynet/features/main/features/news/data/data_sources/get_all_news_repo_usecase.dart';
+import 'package:skynet/features/main/features/news/data/data_sources/get_local_news_usecase.dart';
+import 'package:skynet/features/main/features/news/data/data_sources/get_personal_news_use_case.dart';
+import 'package:skynet/features/main/features/news/data/data_sources/mark_as_viewed_use_case.dart';
 import 'package:skynet/features/main/features/news/presentation/blocs/cubit/mark_as_viewed_cubit.dart';
 import 'package:skynet/features/main/features/news/presentation/blocs/local_news_bloc/localnews_bloc.dart';
 import 'package:skynet/features/main/features/news/presentation/blocs/news_bloc/new_list_bloc.dart';
 import 'package:skynet/features/main/features/news/presentation/blocs/personal_news/personal_news_bloc.dart';
-import 'package:skynet/features/main/features/profile/data/repositories_impl/logout_impl.dart';
-import 'package:skynet/features/main/features/profile/data/usecase/logout_use_case.dart';
+import 'package:skynet/features/main/features/profile/data/repositories/logout_impl.dart';
+import 'package:skynet/features/main/features/profile/data/data_sources/logout_use_case.dart';
 import 'package:skynet/features/main/features/profile/presentation/blocs/bloc/log_out_bloc.dart';
 
 class MyApp extends StatelessWidget {
@@ -174,7 +177,17 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
             create: (context) => ApplicationStatusRepoImpl(
                 useCase:
-                    RepositoryProvider.of<ApplicationStatusUseCase>(context)))
+                    RepositoryProvider.of<ApplicationStatusUseCase>(context))),
+        RepositoryProvider(
+            create: (context) => SendFeedBackDataSource(
+                dio: RepositoryProvider.of<DioSettings>(context).dio,
+                prefs:
+                    RepositoryProvider.of<SharedPreferencesRepository>(context)
+                        .prefs)),
+        RepositoryProvider(
+            create: (context) => SendFeedBackImpl(
+                dataSource:
+                    RepositoryProvider.of<SendFeedBackDataSource>(context)))
       ],
       child: MultiBlocProvider(
         providers: [
@@ -236,7 +249,10 @@ class MyApp extends StatelessWidget {
           BlocProvider(
               create: (context) => ApplicationStatusBloc(
                   repository: RepositoryProvider.of<ApplicationStatusRepoImpl>(
-                      context)))
+                      context))),
+          BlocProvider(
+              create: (context) => SendFeedBackBloc(
+                  impl: RepositoryProvider.of<SendFeedBackImpl>(context)))
         ],
         child: MultiProvider(
           providers: [

@@ -51,7 +51,7 @@ class _ReadNewsPageFromNotificationState
         child: ListView(
           children: [
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: Text(
                 widget.title,
                 style: AppFonts.s20w500.copyWith(color: Colors.black),

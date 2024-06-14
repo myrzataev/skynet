@@ -30,7 +30,6 @@ abstract class AppFonts {
   static TextStyle s14w500 = TextStyle(
       fontSize: ScreenUtil().setSp(14),
       fontWeight: FontWeight.bold,
-      // color: Colors.black,);
       fontFamily: "Gotham");
   static TextStyle s10w500 = TextStyle(
       fontSize: ScreenUtil().setSp(10),
@@ -81,4 +80,5 @@ abstract class AppFonts {
       fontWeight: FontWeight.w500,
       fontSize: ScreenUtil().setSp(18),
       fontFamily: "Gotham");
+      
 }

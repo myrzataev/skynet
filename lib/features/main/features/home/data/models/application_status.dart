@@ -2,34 +2,42 @@
 //
 //     final application = applicationFromJson(jsonString);
 
+// To parse this JSON data, do
+//
+//     final applicationModel = applicationModelFromJson(jsonString);
+
 import 'dart:convert';
 
 import 'package:skynet/features/main/features/home/domain/entity/application_status_entity.dart';
 
-List<ApplicationModel> applicationFromJson(String str) =>
+List<ApplicationModel> applicationModelFromJson(String str) =>
     List<ApplicationModel>.from(
         json.decode(str).map((x) => ApplicationModel.fromJson(x)));
 
-String applicationToJson(List<ApplicationModel> data) =>
+String applicationModelToJson(List<ApplicationModel> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 class ApplicationModel {
-  String id;
-  String title;
-  String stageId;
-  String lsAbon;
-  String description;
-  String arrivalDate;
-  String executor;
+  String? id;
+  String? title;
+  String? stageId;
+  String? lsAbon;
+  String? description;
+  String? arrivalDate;
+  String? executor;
+  String? photo;
+  String? phone;
 
   ApplicationModel({
-    required this.id,
-    required this.title,
-    required this.stageId,
-    required this.lsAbon,
-    required this.description,
-    required this.arrivalDate,
-    required this.executor,
+    this.id,
+    this.title,
+    this.stageId,
+    this.lsAbon,
+    this.description,
+    this.arrivalDate,
+    this.executor,
+    this.photo,
+    this.phone,
   });
 
   factory ApplicationModel.fromJson(Map<String, dynamic> json) =>
@@ -41,6 +49,8 @@ class ApplicationModel {
         description: json["DESCRIPTION"],
         arrivalDate: json["ARRIVAL_DATE"],
         executor: json["EXECUTOR"],
+        photo: json["PHOTO"],
+        phone: json["PHONE"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -51,6 +61,8 @@ class ApplicationModel {
         "DESCRIPTION": description,
         "ARRIVAL_DATE": arrivalDate,
         "EXECUTOR": executor,
+        "PHOTO": photo,
+        "PHONE": phone,
       };
   ApplicationStatusEntity toEntity() {
     return ApplicationStatusEntity(
@@ -60,6 +72,8 @@ class ApplicationModel {
         lsAbon: lsAbon,
         description: description,
         arrivalDate: arrivalDate,
-        executor: executor);
+        executor: executor,
+        phone: phone,
+        photo: photo);
   }
 }

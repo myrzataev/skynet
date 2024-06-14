@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:in_app_update/in_app_update.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/custom_stories_shimmer.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/shimmer_container.dart';
 
@@ -63,8 +64,8 @@ class HomePageShimmerPage extends StatelessWidget {
             children: [
               Column(children: [
                 Padding(
-                  padding:  EdgeInsets.only(left: 10.w),
-                  child:  const CustomStoriesShimmer(),
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: const CustomStoriesShimmer(),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25.w),
@@ -152,6 +153,11 @@ class HomePageShimmerPage extends StatelessWidget {
                           ]),
                     ),
                   ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 20.h),
+                  child: CustomShimmerContainer(
+                      height: 85.h, width: 340.w, radius: 10.r),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 20.h),

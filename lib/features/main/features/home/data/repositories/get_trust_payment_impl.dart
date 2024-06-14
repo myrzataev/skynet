@@ -1,5 +1,5 @@
 import 'package:skynet/features/main/features/home/domain/repositories/get_trust_payment.dart';
-import 'package:skynet/features/main/features/home/data/usecase/get_trust_payment_usecase.dart';
+import 'package:skynet/features/main/features/home/data/data_sources/get_trust_payment_usecase.dart';
 
 class GetTrustPaymentRepositoryImpl implements GetTrustPaymentRepository {
   GetTrustPaymentUseCase useCase;

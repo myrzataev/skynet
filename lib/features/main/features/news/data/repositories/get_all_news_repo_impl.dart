@@ -1,6 +1,6 @@
 import 'package:skynet/features/main/features/news/data/models/news_model.dart';
 import 'package:skynet/features/main/features/news/domain/repositories/get_all_news_repo.dart';
-import 'package:skynet/features/main/features/news/data/usecase/get_all_news_repo_usecase.dart';
+import 'package:skynet/features/main/features/news/data/data_sources/get_all_news_repo_usecase.dart';
 
 class GetAllNewsRepositoryImpl implements GetAllNewsRepository {
   GetAllNewsRepositoryUseCase useCase;

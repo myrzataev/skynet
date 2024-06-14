@@ -1,19 +1,24 @@
+
 class ApplicationStatusEntity {
-    String id;
-    String title;
-    String stageId;
-    String lsAbon;
-    String description;
-    String arrivalDate;
-    String executor;
+    String? id;
+    String? title;
+    String? stageId;
+    String? lsAbon;
+    String? description;
+    String? arrivalDate;
+    String? executor;
+    String? photo;
+    String? phone;
 
     ApplicationStatusEntity({
-        required this.id,
-        required this.title,
-        required this.stageId,
-        required this.lsAbon,
-        required this.description,
-        required this.arrivalDate,
-        required this.executor,
+        this.id,
+        this.title,
+        this.stageId,
+        this.lsAbon,
+        this.description,
+        this.arrivalDate,
+        this.executor,
+        this.photo,
+        this.phone,
     });
 }

@@ -8,8 +8,8 @@ import 'package:skynet/config/app_info.dart';
 import 'package:skynet/core/consts/app_consts.dart';
 import 'package:skynet/core/consts/app_fonts.dart';
 import 'package:skynet/features/authorization/presentation/screens/connectivity_widget.dart';
-import 'package:skynet/features/main/features/home/presentation/providers/check_internet_connection.dart';
 import 'package:skynet/features/main/features/home/presentation/blocs/application_status_bloc/application_status_bloc.dart';
+import 'package:skynet/features/main/features/home/presentation/providers/check_internet_connection.dart';
 import 'package:skynet/features/main/features/home/presentation/blocs/pay_cubit/pay_cubit.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/gradient_appbar.dart';
 import 'package:skynet/features/main/features/news/presentation/blocs/personal_news/personal_news_bloc.dart';
@@ -140,12 +140,7 @@ class _MorePageState extends State<MorePage> {
                       onTap: () async {
                         BlocProvider.of<ApplicationStatusBloc>(context)
                             .add(GetApplicationStatusEvent());
-                            SharedPreferences preferences = await SharedPreferences.getInstance();
-                            preferences.remove("viewedNewsList");
-                        // BlocProvider.of<GetPersonalDetailsBloc>(context)
-                        //     .add(GetPersonalDetailEvent());
-                        // SharedPreferences preferences = await SharedPreferences.getInstance();
-                        // print("this is ip_address : ${preferences.getString("ip_address")}");
+                        
                       },
                       text: "Версия приложения",
                       icon: Images.quality,
@@ -159,6 +154,7 @@ class _MorePageState extends State<MorePage> {
                   ],
                 ),
               ),
+          
             ],
           ),
         ),

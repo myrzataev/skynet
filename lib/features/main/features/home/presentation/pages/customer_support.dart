@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/gradient_appbar.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class CustomerSupportScreen extends StatefulWidget {
   const CustomerSupportScreen({super.key});
@@ -10,9 +10,9 @@ class CustomerSupportScreen extends StatefulWidget {
 }
 
 class _CustomerSupportScreenState extends State<CustomerSupportScreen> {
-  // final controller = WebViewController()
-  //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
-  //   ..loadRequest(Uri.parse("https://skynet.bitrix24site.ru"));
+  late WebViewController _webViewController;
+  bool _isLoading = true;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -22,15 +22,53 @@ class _CustomerSupportScreenState extends State<CustomerSupportScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: const Text("Чат с техподдержкой"),
-          flexibleSpace: const GradientAppBar()),
-      body: InAppWebView(
-        initialUrlRequest:
-            URLRequest(url: Uri.parse("https://skynet.bitrix24site.ru")),
-        onWebViewCreated: (InAppWebViewController controller) {
-        },
-      ),
-    );
+        appBar: AppBar(
+            title: const Text("Чат с техподдержкой"),
+            flexibleSpace: const GradientAppBar()),
+        body: Stack(
+          children: [
+            WebView(
+              initialUrl: 'https://skynet.bitrix24site.ru',
+              javascriptMode: JavascriptMode.unrestricted,
+              onPageFinished: (String url) {
+                _hideFooterAndSimulateClick();
+                setState(() {
+                  _isLoading = false;
+                });
+              },
+              onWebViewCreated: (WebViewController controller) {
+                _webViewController = controller;
+              },
+            ),
+            if (_isLoading)
+             const Center(
+                child: CircularProgressIndicator(),
+              ),
+          ],
+        ));
+  }
+
+  void _hideFooterAndSimulateClick() async {
+    const String hideAndClickJS = '''
+    (function() {
+      // Hide the footer element
+      var footerElements = document.getElementsByClassName('bitrix-footer');
+      if (footerElements.length > 0) {
+        footerElements[0].style.display = 'none';
+      }
+
+      // Simulate click on the specified element
+      var clickTarget = document.querySelector('[data-b24-crm-button-icon="openline"]');
+      if (clickTarget) {
+        clickTarget.click();
+      }
+    })();
+  ''';
+
+    try {
+      await _webViewController.runJavascript(hideAndClickJS);
+    } catch (e) {
+      print("Error while executing JavaScript: $e");
+    }
   }
 }

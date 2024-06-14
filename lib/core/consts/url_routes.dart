@@ -11,4 +11,5 @@ abstract class UrlRoutes {
   static const String localNews = "/news/api/loc-post/list/";
   static const String markAsViewed = "/news/api/hit/";
   static const String applicationStatus = "/bitrix_techpod/";
+  static const String feedBack = "/bx_review/";
 }

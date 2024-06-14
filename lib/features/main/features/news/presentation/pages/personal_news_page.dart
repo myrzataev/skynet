@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skynet/core/services/shared_preferences_provider.dart';
+import 'package:skynet/features/main/features/home/presentation/providers/viewed_news_list.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/custom_error_widget.dart';
 import 'package:skynet/features/main/features/news/presentation/blocs/personal_news/personal_news_bloc.dart';
 import 'package:skynet/features/main/features/news/presentation/pages/read_news_page.dart';
@@ -58,8 +59,11 @@ class _PersonalNewsPageState extends State<PersonalNewsPage>
                             return InkWell(
                               onTap: () {
                                 setState(() {
-                                  prefs.setStringList("viewed_news",
-                                      [state.model[index].id.toString()]);
+                                  context
+                                      .read<ViewedNewsProvider>()
+                                      .addToViewedNewsList(
+                                          data:
+                                              state.model[index].id.toString());
                                 });
                                 Navigator.push(
                                     context,
@@ -80,10 +84,9 @@ class _PersonalNewsPageState extends State<PersonalNewsPage>
                                             )));
                               },
                               child: CustomNewsCard(
-                                isRead: prefs
-                                        .getStringList("viewed_news")
-                                        ?.contains(
-                                            state.model[index].id.toString()) ??
+                                 isRead: prefs
+                                        .getStringList("viewedNewsList")
+                                        ?.contains(state.model[index].id.toString()) ??
                                     false,
                                 title: state.model[index].title ?? "",
                                 image: state.model[index].image ?? "",

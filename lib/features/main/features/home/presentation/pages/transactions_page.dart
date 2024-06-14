@@ -50,7 +50,7 @@ class _TransactionsPageState extends State<TransactionsPage> {
                           state.model.transactions[index][1].toString();
                       DateTime dateTime = DateTime.parse(dateString);
                       final formattedDate = DateFormat(
-                        'd MMMM',
+                        'd MMMM',"ru_RU"
                       ).format(dateTime);
 
                       return Padding(

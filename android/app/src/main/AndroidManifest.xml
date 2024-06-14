@@ -1,12 +1,26 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
- <uses-permission android:name="android.permission.INTERNET"/>
- <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
- <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT"/>
 
+    <!-- <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" /> -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="tel" />
+        </intent>
+    </queries>
     <application
         android:label="skynet"
         android:name="${applicationName}"
         android:icon="@mipmap/logo">
+        
+        <!-- Declare the use of full-screen intent -->
+        <meta-data
+            android:name="com.google.android.gms.full_screen_intent"
+            android:value="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

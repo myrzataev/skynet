@@ -26,7 +26,7 @@ class CustomNewsCard extends StatelessWidget {
       padding: EdgeInsets.only(bottom: 10.h, left: 5.w, right: 5.w),
       child: Container(
         width: double.infinity,
-        height: 96.h,
+        height: 100.h,
         decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(

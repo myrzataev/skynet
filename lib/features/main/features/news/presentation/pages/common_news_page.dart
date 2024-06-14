@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:skynet/core/services/service_locator.dart';
 import 'package:skynet/core/services/shared_preferences_provider.dart';
 import 'package:skynet/features/main/features/home/presentation/providers/viewed_news_list.dart';
 import 'package:skynet/features/main/features/home/presentation/widgets/custom_error_widget.dart';

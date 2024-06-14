@@ -1,6 +1,6 @@
 import 'package:skynet/features/main/features/home/data/models/transactions_model.dart';
 import 'package:skynet/features/main/features/home/domain/repositories/get_transactions_history.dart';
-import 'package:skynet/features/main/features/home/data/usecase/get_transactions_histor_usecase.dart';
+import 'package:skynet/features/main/features/home/data/data_sources/get_transactions_histor_usecase.dart';
 
 class GetTransactionsHistoryRepoImpl implements GetTransactionsHistoryRepo{
   GetTransactionsHistoryRepoImpl({required this.useCase});

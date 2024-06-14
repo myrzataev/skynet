@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:skynet/core/consts/app_fonts.dart';
 import 'package:skynet/features/main/features/news/data/models/local_news_model.dart';
+import 'package:skynet/features/main/features/news/presentation/blocs/cubit/mark_as_viewed_cubit.dart';
 
 void openFullscreenNews(
     {required LocalNewsModel newsItem, required BuildContext context}) {
+      
   showDialog(
     context: context,
     barrierColor: Colors.black.withOpacity(0.7), // Задний фон полупрозрачный
@@ -64,3 +67,4 @@ void openFullscreenNews(
     },
   );
 }
+ 

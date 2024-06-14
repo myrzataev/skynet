@@ -32,7 +32,7 @@ class _ReadNewsPageState extends State<ReadNewsPage> {
   void markAsViewed() async {
     BlocProvider.of<MarkAsViewedCubit>(context)
         .markAsViewed(postId: widget.postId, postType: widget.postType);
-        print("sended successfully");
+        // print("sended successfully");
   }
   @override
   void initState() {

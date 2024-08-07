@@ -44,6 +44,7 @@ class Images {
   static const String more = 'assets/pngs/more.png';
   static const String newstest = 'assets/pngs/newstest.png';
   static const String newsunabled = 'assets/pngs/newsunabled.png';
+  static const String notific = 'assets/pngs/notific.png';
   static const String odengi = 'assets/pngs/odengi.png';
   static const String odengitwo = 'assets/pngs/odengitwo.png';
   static const String optima = 'assets/pngs/optima.png';

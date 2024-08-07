@@ -91,7 +91,8 @@ final GoRouter appRoutes = GoRouter(
                   state.extra as ApplicationStatusEntity;
               return ApplicationStatusScreen(model: model);
             },
-          )
+          ),
+          
         ]),
   ],
 );

@@ -20,6 +20,9 @@
         <meta-data
             android:name="com.google.android.gms.full_screen_intent"
             android:value="true" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="default_channel_id" />
 
         <activity
             android:name=".MainActivity"

@@ -8,9 +8,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skynet/core/consts/app_fonts.dart';
 import 'package:skynet/core/services/clipboard_copy.dart';
 import 'package:skynet/core/services/service_locator.dart';
+import 'package:skynet/core/services/shared_preferences_provider.dart';
 import 'package:skynet/features/authorization/presentation/blocs/internet_cubit/internet_cubit.dart';
 import 'package:skynet/features/authorization/presentation/screens/connectivity_widget.dart';
 import 'package:skynet/features/main/features/home/data/models/stories_model.dart';
@@ -53,6 +55,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  final SharedPreferences prefs = SharedPreferencesRepository().prefs;
+  bool? hasNewNotification;
+
   @override
   bool get wantKeepAlive => true;
   bool isConnected = true;
@@ -107,6 +114,7 @@ class _HomePageState extends State<HomePage>
           isConnected:
               context.watch<CheckInternetConnectionProvider>().isConnected,
           child: Scaffold(
+            key: _scaffoldKey,
             body: BlocConsumer<GetPersonalDetailsBloc, GetPersonalDetailsState>(
               listener: (context, state) {
                 if (state is GetPersonalDetailsSuccess) {
@@ -138,6 +146,7 @@ class _HomePageState extends State<HomePage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CustomAppBar(
+                            isNotificationReceived: true,
                             nameSurName: state.model.name ?? "",
                             address: state.model.address?.first ?? "",
                           ),
@@ -504,36 +513,60 @@ class _HomePageState extends State<HomePage>
                                           "Подключенные услуги:",
                                           style: AppFonts.s22w700,
                                         ),
-                                        SizedBox(
-                                          height:
-                                              ((state.model.services?.length ??
-                                                      0) *
-                                                  73.h),
-                                          child: ListView.builder(
-                                            padding: EdgeInsets.zero,
-                                            physics:
-                                                const NeverScrollableScrollPhysics(),
-                                            itemCount:
-                                                state.model.services?.length,
-                                            itemBuilder: (context, index) =>
-                                                ActiveServices(
-                                                    priceOfTarif: state
-                                                            .model
-                                                            .services?[index]
-                                                            .price
-                                                            .toString() ??
-                                                        "",
-                                                    imageOfService:
-                                                        Images.internet,
-                                                    serviceName: state.model
-                                                        .services?[index].name,
-                                                    status: state
-                                                            .model
-                                                            .services?[index]
-                                                            .state ??
-                                                        ""),
-                                          ),
-                                        ),
+                                        (state.model.services?.isEmpty ?? true)
+                                            ? Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 8.0.h,
+                                                    horizontal: 5.w),
+                                                child: Text(
+                                                  "Услуги интернета  не подключены так, как  вы не оплатили за текущий месяц",
+                                                  style: AppFonts.s14w700
+                                                      .copyWith(
+                                                          color: const Color(
+                                                              0xff808080)),
+                                                ),
+                                              )
+                                            : SizedBox(
+                                                height: ((state.model.services
+                                                            ?.length ??
+                                                        0) *
+                                                    73.h),
+                                                child: ListView.builder(
+                                                    padding: EdgeInsets.zero,
+                                                    physics:
+                                                        const NeverScrollableScrollPhysics(),
+                                                    itemCount: state
+                                                        .model.services?.length,
+                                                    itemBuilder:
+                                                        (context, index) {
+                                                      return ActiveServices(
+                                                          priceOfTarif: state
+                                                                  .model
+                                                                  .services?[
+                                                                      index]
+                                                                  .price
+                                                                  .toString() ??
+                                                              "",
+                                                          imageOfService:
+                                                              Images.internet,
+                                                          serviceName: state
+                                                              .model
+                                                              .services?[index]
+                                                              .name,
+                                                          status: state
+                                                                  .model
+                                                                  .services?[
+                                                                      index]
+                                                                  .state ??
+                                                              "");
+                                                    }),
+                                              ),
+                                        // ElevatedButton(
+                                        //     onPressed: () {
+                                        //       print(
+                                        //           state.model.services?.length);
+                                        //     },
+                                        //     child: Text("dsadfw"))
                                       ],
                                     ),
                                   ),
@@ -562,4 +595,13 @@ class _HomePageState extends State<HomePage>
           )),
     );
   }
+
+  // bool hasNewNotificationMethod() {
+  //   int? hasNewNotifications = prefs.getInt("notifsLength");
+  //   if (hasNewNotifications != null) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 }

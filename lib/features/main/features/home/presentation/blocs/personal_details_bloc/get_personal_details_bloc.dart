@@ -17,7 +17,7 @@ class GetPersonalDetailsBloc
       emit(GetPersonalDetailsLoading());
       try {
         final model = await repository.getProfileDetails();
-        prefs.setString("ip_address", model.ipAddress);
+        prefs.setString("ip_address", model.ipAddress??"192.1.2.1");
         emit(GetPersonalDetailsSuccess(model: model));
       } catch (e) {
         emit(GetPersonalDetailsError(errorText: e.toString()));

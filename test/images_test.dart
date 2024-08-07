@@ -43,6 +43,7 @@ void main() {
     expect(File(Images.more).existsSync(), isTrue);
     expect(File(Images.newstest).existsSync(), isTrue);
     expect(File(Images.newsunabled).existsSync(), isTrue);
+    expect(File(Images.notific).existsSync(), isTrue);
     expect(File(Images.odengi).existsSync(), isTrue);
     expect(File(Images.odengitwo).existsSync(), isTrue);
     expect(File(Images.optima).existsSync(), isTrue);

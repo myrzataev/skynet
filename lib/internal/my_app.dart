@@ -13,8 +13,14 @@ import 'package:skynet/features/authorization/data/data_sources/confirm_code_rep
 import 'package:skynet/features/authorization/presentation/blocs/authorization_bloc/authorization_bloc.dart';
 import 'package:skynet/features/authorization/presentation/blocs/confirm_code_bloc/confirm_code_bloc.dart';
 import 'package:skynet/features/authorization/presentation/blocs/internet_cubit/internet_cubit.dart';
+import 'package:skynet/features/main/features/home/data/data_sources/get_notifications_list_ds.dart';
+import 'package:skynet/features/main/features/home/data/data_sources/mark_notification_as_viewed_ds.dart';
 import 'package:skynet/features/main/features/home/data/data_sources/sen_feedback_ds.dart';
+import 'package:skynet/features/main/features/home/data/repositories/get_notifications_list_impl.dart';
+import 'package:skynet/features/main/features/home/data/repositories/mark_notification_as_viewed_impl.dart';
 import 'package:skynet/features/main/features/home/data/repositories/send_feedback_impl.dart';
+import 'package:skynet/features/main/features/home/presentation/blocs/get_notifications_list_bloc/get_notifications_list_bloc.dart';
+import 'package:skynet/features/main/features/home/presentation/blocs/mark_notification_as_viewed_bloc/mark_notification_as_viewed_bloc.dart';
 import 'package:skynet/features/main/features/home/presentation/blocs/send_feedback/send_feed_back_bloc.dart';
 import 'package:skynet/features/main/features/home/presentation/providers/check_internet_connection.dart';
 import 'package:skynet/features/main/features/home/presentation/providers/profile_info_provider.dart';
@@ -187,7 +193,27 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(
             create: (context) => SendFeedBackImpl(
                 dataSource:
-                    RepositoryProvider.of<SendFeedBackDataSource>(context)))
+                    RepositoryProvider.of<SendFeedBackDataSource>(context))),
+        RepositoryProvider(
+            create: (context) => GetNotificationsListDs(
+                dio: RepositoryProvider.of<DioSettings>(context).dio,
+                preferences:
+                    RepositoryProvider.of<SharedPreferencesRepository>(context)
+                        .prefs)),
+        RepositoryProvider(
+            create: (context) => GetNotificationsListImpl(
+                dataSource:
+                    RepositoryProvider.of<GetNotificationsListDs>(context))),
+        RepositoryProvider(
+            create: (context) => MarkNotificationAsViewedDs(
+                dio: RepositoryProvider.of<DioSettings>(context).dio,
+                preferences:
+                    RepositoryProvider.of<SharedPreferencesRepository>(context)
+                        .prefs)),
+        RepositoryProvider(
+            create: (context) => MarkNotificationAsViewedImpl(
+                dataSource:
+                    RepositoryProvider.of<MarkNotificationAsViewedDs>(context)))
       ],
       child: MultiBlocProvider(
         providers: [
@@ -252,41 +278,49 @@ class MyApp extends StatelessWidget {
                       context))),
           BlocProvider(
               create: (context) => SendFeedBackBloc(
-                  impl: RepositoryProvider.of<SendFeedBackImpl>(context)))
+                  impl: RepositoryProvider.of<SendFeedBackImpl>(context))),
+          BlocProvider(
+              create: (context) => GetNotificationsListBloc(
+                  repoImpl: RepositoryProvider.of<GetNotificationsListImpl>(
+                      context))),
+          BlocProvider(
+              create: (context) => MarkNotificationAsViewedBloc(
+                  repoImpl: RepositoryProvider.of<MarkNotificationAsViewedImpl>(
+                      context)))
         ],
         child: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-                create: (context) => GetProfileInfoProvider()),
-            ChangeNotifierProvider(
-                create: (context) => CheckInternetConnectionProvider()),
-            ChangeNotifierProvider(create: (context) => SmsCodeProvider()),
-            ChangeNotifierProvider(
-                create: (context) => ViewedNewsProvider(
-                    prefs: RepositoryProvider.of<SharedPreferencesRepository>(
-                            context)
-                        .prefs))
-          ],
-          child: ScreenUtilInit(
-            ensureScreenSize: true,
-            rebuildFactor: (previous, current) => false,
-            useInheritedMediaQuery: true,
-            splitScreenMode: true,
-            minTextAdapt: true,
-            designSize: const Size(390.0, 803.0),
-            builder: (context, child) {
-              return TextFieldUnfocus(
-                child: MaterialApp.router(
+            providers: [
+              ChangeNotifierProvider(
+                  create: (context) => GetProfileInfoProvider()),
+              ChangeNotifierProvider(
+                  create: (context) => CheckInternetConnectionProvider()),
+              ChangeNotifierProvider(create: (context) => SmsCodeProvider()),
+              ChangeNotifierProvider(
+                  create: (context) => ViewedNewsProvider(
+                      prefs: RepositoryProvider.of<SharedPreferencesRepository>(
+                              context)
+                          .prefs))
+            ],
+            child: ScreenUtilInit(
+              ensureScreenSize: true,
+              rebuildFactor: (previous, current) => false,
+              useInheritedMediaQuery: true,
+              splitScreenMode: true,
+              minTextAdapt: true,
+              designSize: const Size(390.0, 803.0),
+              builder: (context, child) {
+                return TextFieldUnfocus(
+                  child: MaterialApp.router(
                     routerConfig: appRoutes,
                     builder: (context, child) {
                       return MediaQuery.withNoTextScaling(child: child!);
                     },
                     debugShowCheckedModeBanner: false,
-                    theme: ThemeData(scaffoldBackgroundColor: Colors.white)),
-              );
-            },
-          ),
-        ),
+                    theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+                  ),
+                );
+              },
+            )),
       ),
     );
   }

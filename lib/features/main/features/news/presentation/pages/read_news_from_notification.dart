@@ -40,7 +40,7 @@ class _ReadNewsPageFromNotificationState
             },
             icon: const ImageIcon(AssetImage(Images.closeicon))),
         title: Text(
-          "Новости",
+          "Уведомление",
           style: AppFonts.s20w500.copyWith(color: Colors.white),
         ),
         flexibleSpace: const GradientAppBar(),

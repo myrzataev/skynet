@@ -16,10 +16,25 @@ import 'package:skynet/internal/my_app.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-Future _firebaseBackgroundMessage(RemoteMessage message) async {
+Future<void> _firebaseBackgroundMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
   if (message.notification != null) {
-    // print("some notification received");
+    print("Background notification received: ${message.notification?.title}, ${message.notification?.body}");
+  }
+}
+
+void handleNotification(RemoteMessage message) {
+  final String payloadStringData = jsonEncode(message.data);
+  if (message.notification != null) {
+    final title = message.notification!.title ?? "";
+    final body = message.notification!.body ?? "";
+
+    print("Foreground notification received: $title, $body, $payloadStringData");
+
+    PushNotifications.showSimpleNotification(
+        title: title, body: body, payload: payloadStringData);
+  } else {
+    print("Foreground notification received with no title or body: ${message.data}");
   }
 }
 
@@ -34,36 +49,40 @@ void main(List<String> args) async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await ScreenUtil.ensureScreenSize();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform)
-      // ignore: body_might_complete_normally_catch_error
       .catchError((e) {
-    // print(" Error : ${e.toString()}");
+    print("Firebase initialization error: ${e.toString()}");
   });
   PushNotifications.init();
   PushNotifications.localNotiInit();
   await GlobalConfig.initialize();
 
-  //listen to background notifications
+  // Listen to background notifications
+  FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
 
-  FirebaseMessaging.onBackgroundMessage(
-      (message) => _firebaseBackgroundMessage(message));
-//on background messages
-  FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) {
-    if (remoteMessage.notification != null) {
-      appRoutes.go(
-          '/bottomNavigation/readNewsFromNotification/${remoteMessage.notification?.title ?? ""}/${remoteMessage.notification?.body ?? ""}');
-    }
+  // Handle notification when the app is in background or terminated
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    _handleMessage(message);
   });
-// on foregroundmessages
+
+  // Handle notification when the app is in foreground
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    final String payloadStringData = jsonEncode(message.data);
-    if (message.notification != null) {
-      PushNotifications.showSimpleNotification(
-          title: message.notification!.title ?? "",
-          body: message.notification!.body ?? "",
-          payload: payloadStringData);
-    }
+    handleNotification(message);
   });
+
   await setupServiceLocator();
 
   runApp(const MyApp());
+}
+
+void _handleMessage(RemoteMessage message) {
+  final String title = message.notification?.title ?? '';
+  final String body = message.notification?.body ?? '';
+  final Map<String, dynamic> data = message.data;
+
+  print("Notification opened from background: $title, $body, $data");
+
+  navigatorKey.currentState?.pushNamed(
+    '/bottomNavigation/readNewsFromNotification/$title/$body',
+    arguments: data,
+  );
 }

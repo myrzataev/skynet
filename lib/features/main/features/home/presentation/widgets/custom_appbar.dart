@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skynet/core/consts/app_fonts.dart';
+import 'package:skynet/features/main/features/home/presentation/pages/notifications_list_screen.dart';
 import 'package:skynet/resources/resources.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String nameSurName;
   final String address;
-  const CustomAppBar({
-    super.key,
-    required this.nameSurName,
-    required this.address,
-  });
+  final bool isNotificationReceived;
+  const CustomAppBar(
+      {super.key,
+      required this.nameSurName,
+      required this.address,
+      required this.isNotificationReceived});
 
   @override
   Widget build(BuildContext context) {
@@ -33,38 +35,61 @@ class CustomAppBar extends StatelessWidget {
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.only(left: 25.w),
-          child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-            SizedBox(
-              width: 270.w,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    nameSurName,
-                    style: AppFonts.s24w700,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 270.w,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        nameSurName,
+                        style: AppFonts.s24w700,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        address,
+                        style: AppFonts.s12w500,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      )
+                    ],
                   ),
-                  Text(
-                    address,
-                    style: AppFonts.s12w500,
-                    softWrap: true,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  )
-                ],
-              ),
-            ),
-            const Spacer(),
-            Padding(
-              padding: EdgeInsets.only(right: 25.w),
-              child: Image.asset(
-                Images.logo,
-                height: 30.h,
-                width: 30.w,
-              ),
-            )
-          ]),
+                ),
+
+                Stack(children: [
+                  IconButton(
+                    icon: const Icon(Icons.notifications_none),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const NotificationsListScreen()));
+                    },
+                  ),
+                  isNotificationReceived
+                      ? Positioned(
+                          right: 10.w,
+                          top: 10.h,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.red,
+                            radius: 4.r,
+                          ),
+                        )
+                      : const SizedBox()
+                ]),
+                // const Spacer(),
+                Image.asset(
+                  Images.logo,
+                  height: 30.h,
+                  width: 30.w,
+                )
+              ]),
         ),
       ),
     );

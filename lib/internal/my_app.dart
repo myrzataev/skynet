@@ -289,38 +289,38 @@ class MyApp extends StatelessWidget {
                       context)))
         ],
         child: MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                  create: (context) => GetProfileInfoProvider()),
-              ChangeNotifierProvider(
-                  create: (context) => CheckInternetConnectionProvider()),
-              ChangeNotifierProvider(create: (context) => SmsCodeProvider()),
-              ChangeNotifierProvider(
-                  create: (context) => ViewedNewsProvider(
-                      prefs: RepositoryProvider.of<SharedPreferencesRepository>(
-                              context)
-                          .prefs))
-            ],
-            child: ScreenUtilInit(
-              ensureScreenSize: true,
-              rebuildFactor: (previous, current) => false,
-              useInheritedMediaQuery: true,
-              splitScreenMode: true,
-              minTextAdapt: true,
-              designSize: const Size(390.0, 803.0),
-              builder: (context, child) {
-                return TextFieldUnfocus(
-                  child: MaterialApp.router(
+          providers: [
+            ChangeNotifierProvider(
+                create: (context) => GetProfileInfoProvider()),
+            ChangeNotifierProvider(
+                create: (context) => CheckInternetConnectionProvider()),
+            ChangeNotifierProvider(create: (context) => SmsCodeProvider()),
+            ChangeNotifierProvider(
+                create: (context) => ViewedNewsProvider(
+                    prefs: RepositoryProvider.of<SharedPreferencesRepository>(
+                            context)
+                        .prefs))
+          ],
+          child: ScreenUtilInit(
+            ensureScreenSize: true,
+            rebuildFactor: (previous, current) => false,
+            useInheritedMediaQuery: true,
+            splitScreenMode: true,
+            minTextAdapt: true,
+            designSize: const Size(390.0, 803.0),
+            builder: (context, child) {
+              return TextFieldUnfocus(
+                child: MaterialApp.router(
                     routerConfig: appRoutes,
                     builder: (context, child) {
                       return MediaQuery.withNoTextScaling(child: child!);
                     },
                     debugShowCheckedModeBanner: false,
-                    theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-                  ),
-                );
-              },
-            )),
+                    theme: ThemeData(scaffoldBackgroundColor: Colors.white)),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

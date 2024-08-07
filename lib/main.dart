@@ -16,7 +16,7 @@ import 'package:skynet/internal/my_app.dart';
 
 final navigatorKey = GlobalKey<NavigatorState>();
 
-Future<void> _firebaseBackgroundMessage(RemoteMessage message) async {
+Future _firebaseBackgroundMessage(RemoteMessage message) async {
   await Firebase.initializeApp();
   if (message.notification != null) {
     print("Background notification received: ${message.notification?.title}, ${message.notification?.body}");
@@ -58,31 +58,26 @@ void main(List<String> args) async {
 
   // Listen to background notifications
   FirebaseMessaging.onBackgroundMessage(_firebaseBackgroundMessage);
-
-  // Handle notification when the app is in background or terminated
-  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    _handleMessage(message);
+  
+  // On background messages
+  FirebaseMessaging.onMessageOpenedApp.listen((remoteMessage) {
+    if (remoteMessage.notification != null) {
+      final title = remoteMessage.notification!.title ?? "";
+      final body = remoteMessage.notification!.body ?? "";
+      print("Notification opened from background: $title, $body, ${remoteMessage.data}");
+      appRoutes.go(
+          '/bottomNavigation/readNewsFromNotification/$title/$body');
+    } else {
+      print("Notification opened from background with no title or body: ${remoteMessage.data}");
+    }
   });
-
-  // Handle notification when the app is in foreground
+  
+  // On foreground messages
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     handleNotification(message);
   });
-
+  
   await setupServiceLocator();
 
   runApp(const MyApp());
-}
-
-void _handleMessage(RemoteMessage message) {
-  final String title = message.notification?.title ?? '';
-  final String body = message.notification?.body ?? '';
-  final Map<String, dynamic> data = message.data;
-
-  print("Notification opened from background: $title, $body, $data");
-
-  navigatorKey.currentState?.pushNamed(
-    '/bottomNavigation/readNewsFromNotification/$title/$body',
-    arguments: data,
-  );
 }
